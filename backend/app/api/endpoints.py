@@ -1,9 +1,16 @@
 from fastapi import APIRouter, HTTPException
 from typing import Dict, Any
 from app.utils.parse_pokemon_data import parse_pokemon_data
+from app.utils.prompts import strategy_prompt
+from app.config.llm import llm
+import json
 # Create routers
 pokemon_router = APIRouter()
 health_router = APIRouter()
+
+
+with open("all_pokemon_descriptions.json", "r") as f:
+    pokemon_descriptions = json.load(f)
 
 # Pokemon endpoints
 @pokemon_router.get("/{pokemon_name}")
@@ -26,6 +33,13 @@ async def compare_pokemon(
         "pokemon2": await parse_pokemon_data(pokemon2)
     }
 
+@pokemon_router.post("/strategy")
+async def get_strategy(
+    user_query: str
+) ->  str | None:
+    strategy_prompt_template = strategy_prompt.format(user_query=user_query, pokemon_description=pokemon_descriptions)
+    return llm.generate_content(strategy_prompt_template)
+    
 # Health check endpoint
 @health_router.get("")
 async def health_check() -> Dict[str, str]:

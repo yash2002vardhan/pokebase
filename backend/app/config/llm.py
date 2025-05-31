@@ -1,4 +1,4 @@
-from typing import Generator
+from typing import Generator, AsyncGenerator
 from google import genai
 from app.config.env import settings
 
@@ -14,7 +14,7 @@ class GeminiLLM:
         )
         return response.text
 
-    def stream_content(self, prompt: str) -> Generator[str | None, None, None]:
+    async def stream_content(self, prompt: str) -> AsyncGenerator[str | None, None]:
         for chunk in self.gemini_client.models.generate_content_stream(model='gemini-2.0-flash',contents=prompt):
             yield chunk.text
 
