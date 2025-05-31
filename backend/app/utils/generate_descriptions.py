@@ -23,11 +23,11 @@ all_pokemon_descriptions = []
 for idx, entry in enumerate(data):
     name = entry["pokemon_species"].capitalize()
     base_experience = entry["base_experience"]
-    height = round(entry["height"] / 10, 1)  # decimeters → meters
+    height = round(entry["pokemon_height"] / 10, 1)  # decimeters → meters
     weight = round(entry["pokemon_weight"] / 10, 1)  # hectograms → kilograms
 
     pokemon_type = format_list(capitalize_list(entry["types"]))
-    roles = format_list(capitalize_list(entry.get("roles", []))) or "none"
+    roles = format_list(capitalize_list(entry.get("role_type", []))) or "none"
 
     abilities = entry["abilities"]
     standard_abilities = [key for key, val in abilities.items() if val]
