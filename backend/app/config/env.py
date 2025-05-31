@@ -3,7 +3,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
 
-    POKEMON_API_URL: str = "https://pokeapi.co/api/v2/"
+    POKEMON_API_URL: str = "https://pokeapi.co/api/v2"
 
 
 

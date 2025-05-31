@@ -5,7 +5,11 @@ description = "Default template for PDM package"
 authors = [
     {name = "Yashvardhan Goel", email = "yash2002goel@gmail.com"},
 ]
-dependencies = ["requests>=2.32.3", "pydantic-settings>=2.9.1", "fastapi>=0.115.12"]
+dependencies = [
+    "aiohttp>=3.9.3",
+    "pydantic-settings>=2.9.1",
+    "fastapi[standard]>=0.115.12"
+]
 requires-python = "==3.12.*"
 readme = "README.md"
 license = {text = "MIT"}
@@ -13,3 +17,6 @@ license = {text = "MIT"}
 
 [tool.pdm]
 distribution = false
+
+[tool.pdm.scripts]
+dev = "uvicorn app.main:app --reload --app-dir ."
