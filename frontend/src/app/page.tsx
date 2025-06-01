@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { api } from '@/utils/api';
 
 const COMMANDS = [
@@ -15,12 +15,28 @@ export default function Home() {
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [history, setHistory] = useState<string[]>([]);
+  const [historyIndex, setHistoryIndex] = useState<number | null>(null);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Filtered command suggestions
+  const isTypingCommand = command.startsWith('/') && !command.includes(' ');
+  const filteredSuggestions =
+    isTypingCommand && command.length > 1
+      ? COMMANDS.filter((c) => c.startsWith(command))
+      : [];
 
   const handleCommand = async (e: React.FormEvent) => {
     e.preventDefault();
     setResult(null);
     setError(null);
     setLoading(true);
+    setShowSuggestions(false);
+
+    // Save to history
+    setHistory((prev) => (command.trim() ? [command, ...prev.slice(0, 19)] : prev));
+    setHistoryIndex(null);
 
     const [cmd, ...args] = command.trim().split(/\s+/);
     try {
@@ -60,6 +76,53 @@ export default function Home() {
     }
   };
 
+  // Handle input changes and show suggestions
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCommand(e.target.value);
+    setError(null);
+    setShowSuggestions(e.target.value.startsWith('/') && !e.target.value.includes(' '));
+    setHistoryIndex(null);
+  };
+
+  // Handle suggestion click
+  const handleSuggestionClick = (suggestion: string) => {
+    setCommand(suggestion + ' ');
+    setShowSuggestions(false);
+    inputRef.current?.focus();
+  };
+
+  // Handle keyboard navigation for history and suggestions
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (showSuggestions && filteredSuggestions.length > 0) {
+      if (e.key === 'ArrowDown' || e.key === 'Tab') {
+        e.preventDefault();
+        setCommand(filteredSuggestions[0] + ' ');
+        setShowSuggestions(false);
+        return;
+      }
+    }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (history.length > 0) {
+        const newIndex = historyIndex === null ? 0 : Math.min(historyIndex + 1, history.length - 1);
+        setHistoryIndex(newIndex);
+        setCommand(history[newIndex]);
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (history.length > 0) {
+        if (historyIndex === null) return;
+        if (historyIndex === 0) {
+          setHistoryIndex(null);
+          setCommand('');
+        } else {
+          setHistoryIndex(historyIndex - 1);
+          setCommand(history[historyIndex - 1]);
+        }
+      }
+    }
+  };
+
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-slate-900 py-8">
       <div className="bg-slate-800 p-8 rounded-lg shadow-lg w-full max-w-xl text-center mb-8 border border-slate-700">
@@ -71,15 +134,33 @@ export default function Home() {
           <li><span className="text-blue-400">/strategy &lt;query&gt;</span> — Get strategy suggestion</li>
           <li><span className="text-blue-400">/team &lt;query&gt;</span> — Get team suggestion</li>
         </ul>
-        <form onSubmit={handleCommand} className="flex flex-col items-center gap-4">
-          <input
-            type="text"
-            placeholder="Type a command, e.g. /get-pokemon-data pikachu"
-            value={command}
-            onChange={e => setCommand(e.target.value)}
-            className="border border-slate-600 bg-slate-900 text-white p-3 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-            autoFocus
-          />
+        <form onSubmit={handleCommand} className="flex flex-col items-center gap-4 relative">
+          <div className="w-full relative">
+            <input
+              ref={inputRef}
+              type="text"
+              placeholder="Type a command, e.g. /get-pokemon-data pikachu"
+              value={command}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              className={`border ${error ? 'border-red-500' : 'border-slate-600'} bg-slate-900 text-white p-3 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              autoFocus
+              autoComplete="off"
+            />
+            {showSuggestions && filteredSuggestions.length > 0 && (
+              <ul className="absolute left-0 right-0 bg-slate-700 border border-slate-600 rounded mt-1 z-10 text-left">
+                {filteredSuggestions.map((s) => (
+                  <li
+                    key={s}
+                    className="px-4 py-2 cursor-pointer hover:bg-blue-600 text-white"
+                    onClick={() => handleSuggestionClick(s)}
+                  >
+                    {s}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
           <button
             type="submit"
             className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-semibold disabled:opacity-50"
