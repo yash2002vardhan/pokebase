@@ -19,8 +19,25 @@ Input Format:
 "QUERY": {user_query}
 "POKÉMON DESCRIPTION": {pokemon_description}
 
-Output a clear and actionable counter-strategy.
+Metion the potential pokemons and output a clear and actionable strategy.
 """
 
+
 team_creation_prompt = """
+You are an expert Pokémon battle strategist and team builder. Based on the user's query and the provided Pokémon descriptions, your task is to select the most optimal team of 6 Pokémon. Choose a well-balanced team that aligns with the user's battle goals, strategy preferences, or thematic constraints as mentioned in the query.
+
+Input Format:  
+"QUERY": {user_query}  
+"POKÉMON DESCRIPTIONS": {pokemon_description}  
+
+Output Format:  
+1. A list of exactly 6 Pokémon names, separated by commas.  
+2. A single, coherent paragraph summarizing the overall team strategy and synergy based on the chosen Pokémon and their descriptions.
+
+
+Output Format:
+
+"Team: list of 6 pokemon names". Followed by a description of the team.
+
+Ensure that the selected team demonstrates strong synergy, type coverage, and strategic diversity (e.g., offense, defense, support roles). Prioritize cohesion and effectiveness for the scenario described in the user query.
 """

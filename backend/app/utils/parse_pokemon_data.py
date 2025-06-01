@@ -63,7 +63,7 @@ async def parse_pokemon_data(pokemon_name: str) -> dict:
         "types": pokemon_types_list,
         "stats": pokemon_stats_dict,
         "base_experience": base_experience,
-        "height": height,
+        "pokemon_height": height,
         "pokemon_id": pokemon_id,
         "pokemon_species": pokemon_species,
         "pokemon_weight": pokemon_weight,
