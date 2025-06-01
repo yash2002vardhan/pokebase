@@ -5,6 +5,7 @@ from app.utils.prompts import strategy_prompt, team_creation_prompt
 from app.config.llm import llm
 from app.utils.generate_descriptions import generate_descriptions
 import json
+from fastapi import Body
 # Create routers
 pokemon_router = APIRouter()
 health_router = APIRouter()
@@ -41,14 +42,14 @@ async def compare_pokemon(
 
 @pokemon_router.post("/strategy")
 async def get_strategy(
-    user_query: str
+    user_query: str = Body(...)
 ) ->  str | None:
     strategy_prompt_template = strategy_prompt.format(user_query=user_query, pokemon_description=pokemon_descriptions)
     return llm.generate_content(strategy_prompt_template)
 
 @pokemon_router.post("/team-building")
 async def get_team(
-    user_query: str
+    user_query: str = Body(...)
 ) ->  str | None:
     team_creation_prompt_template = team_creation_prompt.format(user_query=user_query, pokemon_description=pokemon_descriptions)
     return llm.generate_content(team_creation_prompt_template)
