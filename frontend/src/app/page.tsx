@@ -446,6 +446,9 @@ export default function Home() {
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               error={!!error}
+              multiline
+              minRows={1}
+              maxRows={6}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
