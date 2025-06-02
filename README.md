@@ -64,9 +64,17 @@ frontend/
 
 ### Prerequisites
 - **Python 3.12** (for backend)
-- **Node.js 18+** (for frontend)
+- **Node.js 18+** (for Next.js frontend)
 - **PDM** (Python Dependency Manager)
 - **Google Gemini API Key**
+
+### Clone the Repository
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yash2002vardhan/pokebase.git
+   cd pokebase
+   ```
 
 ### Backend Setup
 
@@ -99,8 +107,12 @@ frontend/
 
 ### Frontend Setup
 
-1. **Navigate to frontend directory**
+1. **Navigate back to project root and then to frontend directory**
    ```bash
+   # If you're in the backend directory, go back to project root first
+   cd ..
+   
+   # Then navigate to frontend directory  
    cd frontend
    ```
 
@@ -115,11 +127,11 @@ frontend/
    echo "NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1" > .env.local
    ```
 
-4. **Run the development server**
+4. **Run the Next.js development server**
    ```bash
    npm run dev
    ```
-   The application will be available at `http://localhost:3000`
+   The Next.js application will be available at `http://localhost:3000`
 
 ## 📖 API Documentation
 
@@ -286,3 +298,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 **Built with ❤️ by Yashvardhan Goel**
 
 For questions or support, please open an issue on GitHub.
+
