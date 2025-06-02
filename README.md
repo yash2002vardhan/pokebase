@@ -185,7 +185,7 @@ The frontend features a terminal-like command interface with the following comma
 ### Interactive Features
 - **Auto-completion**: Type `/` to see available commands
 - **Command History**: Use arrow keys to navigate through previous commands
-- **Animated Bubbles**: Interactive floating Pokémon that respond to mouse interactions
+- **Animated Bubbles**: Floating Pokémon bubbles
 - **Glassmorphism UI**: Modern, translucent design with blur effects
 - **Responsive Design**: Works seamlessly on desktop and mobile devices
 
