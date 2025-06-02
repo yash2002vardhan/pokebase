@@ -5,6 +5,7 @@ from app.utils.prompts import strategy_prompt, team_creation_prompt
 from app.config.llm import llm
 from app.utils.generate_descriptions import generate_descriptions
 from app.config.logging import setup_logger
+from app.config.metrics import REQUEST_COUTNER
 import json
 from fastapi import Body
 
@@ -23,6 +24,7 @@ with open("all_pokemon_descriptions.json", "r") as f:
 async def get_pokemon(
     pokemon_name: str
 ) -> str:
+    REQUEST_COUTNER.labels(method="GET", path="/pokemon/{pokemon_name}", status="200").inc()
     logger.info(f"GET request for Pokemon: {pokemon_name}")
     try:
         pokemon_name = pokemon_name.lower()
@@ -40,6 +42,7 @@ async def compare_pokemon(
     pokemon1: str,
     pokemon2: str
 ) -> str:
+    REQUEST_COUTNER.labels(method="GET", path="/pokemon/compare/{pokemon1}/{pokemon2}", status="200").inc()
     logger.info(f"Compare request received for Pokemon: {pokemon1} and {pokemon2}")
     try:
         p1_data = await parse_pokemon_data(pokemon1)
@@ -57,6 +60,7 @@ async def compare_pokemon(
 async def get_strategy(
     user_query: str = Body(...)
 ) ->  str | None:
+    REQUEST_COUTNER.labels(method="POST", path="/pokemon/strategy", status="200").inc()
     logger.info(f"Strategy request received with query: {user_query}")
     try:
         strategy_prompt_template = strategy_prompt.format(user_query=user_query, pokemon_description=pokemon_descriptions)
@@ -71,6 +75,7 @@ async def get_strategy(
 async def get_team(
     user_query: str = Body(...)
 ) ->  str | None:
+    REQUEST_COUTNER.labels(method="POST", path="/pokemon/team-building", status="200").inc()
     logger.info(f"Team building request received with query: {user_query}")
     try:
         team_creation_prompt_template = team_creation_prompt.format(user_query=user_query, pokemon_description=pokemon_descriptions)
@@ -84,5 +89,6 @@ async def get_team(
 # Health check endpoint
 @health_router.get("")
 async def health_check() -> Dict[str, str]:
+    REQUEST_COUTNER.labels(method="GET", path="/health", status="200").inc()
     logger.info("Health check request received")
     return {"status": "healthy"}

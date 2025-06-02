@@ -2,15 +2,18 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.router import api_router
 from app.config.logging import setup_logger
+from prometheus_fastapi_instrumentator import Instrumentator
 import time
 
 logger = setup_logger("main")
+
 
 app = FastAPI(
     title="Pokebase API",
     description="API for Pokebase application",
     version="1.0.0"
 )
+
 
 # Configure CORS
 app.add_middleware(
@@ -20,6 +23,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+Instrumentator().instrument(app).expose(app=app, endpoint="/metrics")
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
