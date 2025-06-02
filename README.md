@@ -292,6 +292,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [ ] Advanced filtering and search options
 - [ ] Mobile app development
 - [ ] Pokédex completion tracking
+- [ ] Use streaming responses for the llm based endpoints (strategy creation, team building)
 
 ---
 
