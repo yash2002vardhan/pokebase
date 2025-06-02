@@ -194,7 +194,7 @@ The frontend features a terminal-like command interface with the following comma
 ### Backend Tests
 ```bash
 cd backend
-pdm run test
+PYTHONPATH=. pdm run test
 ```
 
 The test suite includes:
